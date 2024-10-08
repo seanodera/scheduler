@@ -1,12 +1,17 @@
 //TODO: Kanban
-import {Avatar, Button, Card, Drawer, Table, Tag, Typography} from "antd";
-import {ReactNode} from "react";
-import {FlagOutlined, PlusOutlined} from "@ant-design/icons";
+import {Avatar, Button, Card, Table, Tag, Typography} from "antd";
+import {useState} from "react";
+import {FlagOutlined, MoreOutlined, PlusOutlined} from "@ant-design/icons";
 import {faker} from "@faker-js/faker";
 import {formatDate} from "date-fns";
+import {Task} from "../data/types.tsx";
+import {Pill} from "../components/common.tsx";
+import TaskDrawer from "../components/Tasks/taskDrawer.tsx";
 
 const {Title, Text} = Typography;
 export default function MyTasksScreen() {
+    const [currentTask, setCurrentTask] = useState<Task>();
+    const [open, setOpen] = useState<boolean>(false);
     const tasks = Array.from({length: 20}, (_, index) => ({
         id: index,
         name: faker.word.noun(),
@@ -49,7 +54,7 @@ export default function MyTasksScreen() {
             <Button icon={<PlusOutlined/>} type={'primary'} size={'large'}>New Project</Button>
         </div>
         <Card className={'mt-2'}>
-            <Table  dataSource={tasks} columns={[
+            <Table bordered dataSource={tasks} columns={[
                 {
                     title: 'Project Name',
                     dataIndex: 'name',
@@ -91,23 +96,23 @@ export default function MyTasksScreen() {
                     key: 'status',
                     render: (text) => (<Tag
                         color={text === 'Pending' ? 'orange' : text === 'Completed' ? 'green' : text === 'Review' ? 'blue' : 'purple'}>{text}</Tag>)
+                },
+                {
+                   key: 'action',
+                    render: () => <Button type={'text'} icon={<MoreOutlined/>}/>
                 }
-            ]}/>
-        </Card>
+            ]} onRow={(row) => {
+                return {
+                    onClick: () => {
+
+                        setCurrentTask(row as Task)
+                        setOpen(true)
+                    }
+                }
+            }}/>
+                </Card>
+            {currentTask && <TaskDrawer task={currentTask} open={open} setOpen={(value) => setOpen(value)}/>}
     </div>
 }
 
 
-export function Pill({active, children}: { active: boolean, children: ReactNode }) {
-    return <span
-        className={`flex h-max rounded-full text-center py-1 px-4  ${active ? 'bg-primary bg-opacity-20 text-primary' : 'bg-light text-gray'}`}>
-        <Text className={active ? 'text-primary' : 'text-gray'}>{children}</Text>
-    </span>
-}
-
-export function TaskDrawer(){
-
-    return <Drawer>
-
-    </Drawer>
-}

@@ -1,24 +1,24 @@
 import { faker } from '@faker-js/faker';
 
-interface Attachment {
+export interface Attachment {
     type: 'PDF' | 'XLS' | 'DOCX' | 'IMG'|string;
     name: string;
     url: string;
 }
 
-interface SubTask {
+export interface SubTask {
     name: string;
     description: string;
-    createdAt: string;
+    createdAt: string | Date;
     completed: boolean;
 }
 
-interface Task {
+export interface Task {
     id: number;
     name: string;
     creator: string;
-    startDate: string;
-    dueDate: string;
+    startDate: string | Date;
+    dueDate: string | Date;
     assignee: string[];
     priority: 'Urgent' | 'Medium' | 'Low'|string;
     status: 'Pending' | 'Completed' | 'Review' | 'In Progress'|string;
