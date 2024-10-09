@@ -7,25 +7,28 @@ import {formatDate} from "date-fns";
 import {Task} from "../data/types.tsx";
 import {Pill} from "../components/common.tsx";
 import TaskDrawer from "../components/Tasks/taskDrawer.tsx";
+import {useModal} from "../contextProvider.tsx";
 
 const {Title, Text} = Typography;
 export default function MyTasksScreen() {
     const [currentTask, setCurrentTask] = useState<Task>();
     const [open, setOpen] = useState<boolean>(false);
-    const tasks = Array.from({length: 20}, (_, index) => ({
-        id: index,
+    const context = useModal();
+    const tasks:Task[] = Array.from({length: 20}, () => ({
+        id: faker.string.alphanumeric(8),
         name: faker.word.noun(),
+        projectId: faker.string.alphanumeric(8),
         creator: faker.string.alphanumeric(10),
         startDate: faker.date.recent().toISOString(),
         dueDate: faker.date.future().toISOString(),
         assignee: [faker.string.alphanumeric(10)],
-        priority: ['Urgent', 'Medium', 'Low'].at(faker.number.int({min: 0, max: 2})),
-        status: ['Pending', 'Completed', 'Review', 'In Progress'].at(faker.number.int({min: 0, max: 3})),
+        priority: ['Urgent', 'Medium', 'Low'].at(faker.number.int({min: 0, max: 2})) || 'Low',
+        status: ['Pending', 'Completed', 'Review', 'In Progress'].at(faker.number.int({min: 0, max: 3})) || 'Pending',
         completed: false,
         description: faker.lorem.paragraph(),
         attachment: [
             {
-                type: ['PDF', 'XLS', 'DOCX', 'IMG'].at(faker.number.int({min: 0, max: 3})),
+                type: ['PDF', 'XLS', 'DOCX', 'IMG'].at(faker.number.int({min: 0, max: 3})) || 'IMG',
                 name: faker.word.noun(),
                 url: faker.internet.url(),
             }
@@ -51,7 +54,7 @@ export default function MyTasksScreen() {
                 <Pill active={false}>Kanban</Pill>
                 <Pill active={false}>Calendar</Pill>
             </div>
-            <Button icon={<PlusOutlined/>} type={'primary'} size={'large'}>New Project</Button>
+            <Button icon={<PlusOutlined/>} type={'primary'} size={'large'} onClick={() => context.showCreateModal()}>New Project</Button>
         </div>
         <Card className={'mt-2'}>
             <Table bordered dataSource={tasks} columns={[

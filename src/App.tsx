@@ -5,6 +5,9 @@ import Home from "./screens/home.tsx";
 import Navbar from "./components/navigation/navbar.tsx";
 import {ConfigProvider} from "antd";
 import MyTasksScreen from "./screens/MyTasks.tsx";
+import ModalProvider from "./contextProvider.tsx";
+import ManageProject from "./screens/ManageProject.tsx";
+import ProjectsScreen from "./screens/projectsScreen.tsx";
 function App() {
 
     const lightTheme = {
@@ -32,14 +35,18 @@ function App() {
 
   return (
     <ConfigProvider theme={lightTheme}>
-      <Router>
-          <Routes>
-              <Route element={<MainShell/>}>
-                  <Route path="/" element={ <Home />} />
-                  <Route path={'/my-tasks'} element={<MyTasksScreen/>}/>
-              </Route>
-          </Routes>
-      </Router>
+     <ModalProvider>
+         <Router>
+             <Routes>
+                 <Route element={<MainShell/>}>
+                     <Route path="/" element={ <Home />} />
+                     <Route path={'/my-tasks'} element={<MyTasksScreen/>}/>
+                     <Route path={'/projects/:id'} element={<ManageProject/>}/>
+                     <Route path={'/projects'} element={<ProjectsScreen/>}/>
+                 </Route>
+             </Routes>
+         </Router>
+     </ModalProvider>
     </ConfigProvider>
   )
 }

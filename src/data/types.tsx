@@ -14,7 +14,8 @@ export interface SubTask {
 }
 
 export interface Task {
-    id: number;
+    id: string;
+    projectId: string;
     name: string;
     creator: string;
     startDate: string | Date;
@@ -30,8 +31,9 @@ export interface Task {
 
 // Example usage:
 const task: Task = {
-    id: faker.number.int(),
+    id: faker.string.alphanumeric(8),
     name: faker.word.noun(),
+    projectId: faker.string.alphanumeric(8),
     creator: faker.string.alphanumeric(10),
     startDate: faker.date.recent().toISOString(),
     dueDate: faker.date.future().toISOString(),
@@ -57,4 +59,19 @@ const task: Task = {
     ],
 };
 
+export interface Project {
+    id: string;
+    poster: string;
+    name: string;
+    description: string;
+    assignee: string[];
+    startDate: string;
+    endDate: string;
+    tasks: Task[];
+    status: 'Running' | 'Completed' | 'Review' | 'In Progress';
+    links: {
+        name: string;
+        url: string;
+    };
+}
 export {task};

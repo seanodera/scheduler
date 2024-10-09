@@ -10,6 +10,7 @@ export default function Navbar() {
                 <Avatar src="/vite.svg" shape="circle" size="large" />
                 <NavLink to="/">Dashboard</NavLink>
                 <NavLink to="/my-tasks">My Tasks</NavLink>
+                <NavLink to={'/projects'}>Projects</NavLink>
                 <NavLink to="/report">Report</NavLink>
             </div>
             <div className="flex items-center gap-4">
@@ -35,10 +36,10 @@ export function NavLink({ to, children }: { to: string, children: React.ReactNod
     return (
         <Link
             to={to}
-            className={`font-medium group ${path === to ? 'text-dark active' : 'text-gray'}`}
+            className={`font-medium group ${(to !== '/' && path.includes(to)) || path === to? 'text-dark active' : 'text-gray'}`}
         >
             {children}
-            <div className={`hidden md:block h-0.5 bg-dark ${path === to ? 'scale-100': 'scale-x-0'} group-hover:scale-100 transition-transform origin-left rounded-full duration-300 ease-out `} />
+            <div className={`hidden md:block h-0.5 bg-dark ${(to !== '/' && path.includes(to) ) || path === to? 'scale-100': 'scale-x-0'} group-hover:scale-100 transition-transform origin-left rounded-full duration-300 ease-out `} />
         </Link>
     );
 }
