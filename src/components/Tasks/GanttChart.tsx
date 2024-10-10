@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
-import 'frappe-gantt/dist/frappe-gantt.css';
-import Gantt from 'frappe-gantt'; // Correct import of Gantt class
+import Gantt from "frappe-gantt";
+
+
 
 const tasks = [
     {

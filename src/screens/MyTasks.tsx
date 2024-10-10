@@ -50,15 +50,16 @@ export default function MyTasksScreen() {
                     <Title level={1} className={'leading-none m-0'}>My Tasks</Title>
                     <Text type={'secondary'} className={'text-lg font-light'}>Monitor all your tasks here</Text>
                 </div>
-                <Pill active={true} onClick={() => setCurrentView('Table')}>Table</Pill>
-                <Pill active={false} onClick={() =>  setCurrentView('Kanban')}>Kanban</Pill>
-                <Pill active={false} onClick={() => setCurrentView('Timeline')}>Calendar</Pill>
+                <Pill active={currentView === 'Table'} onClick={() => setCurrentView('Table')}>Table</Pill>
+                <Pill active={currentView === 'Kanban'} onClick={() =>  setCurrentView('Kanban')}>Kanban</Pill>
+                <Pill active={currentView === 'Timeline'} onClick={() => setCurrentView('Timeline')}>Calendar</Pill>
             </div>
             <Button icon={<PlusOutlined/>} type={'primary'} size={'large'} onClick={() => context.showCreateModal()}>New Project</Button>
         </div>
         <Card className={'mt-2'}>
             {currentView === 'Kanban' && <KanbanBoard tasks={tasks}/>}
             {currentView === 'Table' && <TaskTable tasks={tasks}/>}
+            {/*{currentView === 'Timeline' && <GanttChart/>}*/}
                 </Card>
 
     </div>
