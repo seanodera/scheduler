@@ -1,9 +1,17 @@
 
 .bg-gradient-spots {
-    background: radial-gradient(farthest-side at top right, #804EEC 5%,transparent 70%, transparent 75%),
+    background: radial-gradient(farthest-side at top right, #804EEC 5%,transparent 70%, transparent 75%) repeat,
     radial-gradient(farthest-side at bottom left,#A04CB7,transparent  60%, transparent 75%);
 }
 
+.bg-glass {
+    /* From https://css.glass */
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
 /*primary: '#804EEC',*/
 /*light: '#E3E7ED',*/
 /*gray: '#697483',*/

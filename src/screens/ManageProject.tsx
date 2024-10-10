@@ -4,15 +4,13 @@ import {generateFakeProjects} from "../data/projectData.ts";
 import {EyeOutlined, FlagOutlined, PlusOutlined} from "@ant-design/icons";
 import {useModal} from "../contextProvider.tsx";
 import {formatDate} from "date-fns";
-import {Task} from "../data/types.tsx";
-import TaskDrawer from "../components/Tasks/taskDrawer.tsx";
 import {useState} from "react";
+import KanbanBoard from "../components/KanbanBoard.tsx";
 
 const {Title, Text} = Typography;
 export default function ManageProject() {
     const id = useParams()[ 'id' ];
-    const [currentTask, setCurrentTask] = useState<Task>();
-    const [open, setOpen] = useState<boolean>(false);
+    const [currentView, setCurrentView] = useState<string>('table');
     const context = useModal();
     const project = generateFakeProjects(2)[ 0 ]
     console.log(id);
@@ -63,24 +61,28 @@ export default function ManageProject() {
                     <Dropdown menu={{
                         items: [
                             {
-                                key: 'timeline',
+                                key: 'Timeline',
                                 label: 'Timeline View',
+                                onClick: () => setCurrentView('Timeline')
                             },
                             {
-                                key: 'table',
-                                label: 'Table View'
+                                key: 'Table',
+                                label: 'Table View',
+                                onClick: () => setCurrentView('Table')
                             },
                             {
                                 key: 'Kanban',
-                                label: 'Kanban View'
+                                label: 'Kanban View',
+                                onClick: () => setCurrentView('Kanban')
                             }
                         ]
-                    }}>
+                    }} >
                         <Button icon={<EyeOutlined/>}>Change View</Button>
                     </Dropdown>
                 </div>
                 <div>
-                    <Table  dataSource={project.tasks} columns={[
+                    {currentView === 'Kanban' && <KanbanBoard tasks={project.tasks}/>}
+                    {currentView === 'Table' && <Table dataSource={project.tasks} columns={[
                         {
                             title: 'Task',
                             dataIndex: 'name',
@@ -91,7 +93,8 @@ export default function ManageProject() {
                             dataIndex: 'assignee',
                             key: 'assignee',
                             render: (item: string[]) => (
-                                <div>{item.map((value: string, index: number) => <Avatar key={index} src={value}/>)}</div>)
+                                <div>{item.map((value: string, index: number) => <Avatar key={index}
+                                                                                         src={value}/>)}</div>)
                         },
                         {
                             title: 'Priority',
@@ -126,17 +129,14 @@ export default function ManageProject() {
                     ]} onRow={(row) => {
                         return {
                             onClick: () => {
-
-                                setCurrentTask(row as Task)
-                                setOpen(true)
+                                context.showTaskDrawer(row)
                             }
                         }
-                    }}/>
+                    }}/>}
                 </div>
 
             </Card>
         </div>
-        {currentTask && <TaskDrawer task={currentTask} open={open} setOpen={(value) => setOpen(value)}/>}
 
     </div>
 }

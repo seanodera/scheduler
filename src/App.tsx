@@ -53,7 +53,7 @@ function App() {
 
 function MainShell (){
     return <div className={'bg-gradient-spots'}>
-   <div className={'backdrop-blur bg-white bg-opacity-80'}>
+   <div className={'bg-glass'}>
        <Navbar/>
        <Outlet/>
    </div>

@@ -15,7 +15,8 @@ export default function Navbar() {
             </div>
             <div className="flex items-center gap-4">
                 <Input
-                    className="rounded-xl py-2 px-2"
+                    className="rounded-xl py-2 px-2 bg-glass"
+
                     prefix={<SearchOutlined />}
                     placeholder="Search here"
                 />
