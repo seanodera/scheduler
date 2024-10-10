@@ -1,5 +1,5 @@
 import {Avatar, Card, Typography} from "antd";
-import {Task} from "../data/types.tsx";
+import {Task} from "../../data/types.tsx";
 import {useEffect, useState} from "react";
 import {faker} from "@faker-js/faker";
 

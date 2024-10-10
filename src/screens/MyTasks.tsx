@@ -1,18 +1,18 @@
 //TODO: Kanban
-import {Avatar, Button, Card, Table, Tag, Typography} from "antd";
+import {Button, Card, Typography} from "antd";
 import {useState} from "react";
-import {FlagOutlined, MoreOutlined, PlusOutlined} from "@ant-design/icons";
+import {PlusOutlined} from "@ant-design/icons";
 import {faker} from "@faker-js/faker";
-import {formatDate} from "date-fns";
 import {Task} from "../data/types.tsx";
 import {Pill} from "../components/common.tsx";
-import TaskDrawer from "../components/Tasks/taskDrawer.tsx";
 import {useModal} from "../contextProvider.tsx";
+import KanbanBoard from "../components/Tasks/KanbanBoard.tsx";
+import TaskTable from "../components/Tasks/TabledTasks.tsx";
 
 const {Title, Text} = Typography;
 export default function MyTasksScreen() {
-    const [currentTask, setCurrentTask] = useState<Task>();
-    const [open, setOpen] = useState<boolean>(false);
+    const [currentView, setCurrentView] = useState<string>('Table');
+
     const context = useModal();
     const tasks:Task[] = Array.from({length: 20}, () => ({
         id: faker.string.alphanumeric(8),
@@ -50,71 +50,17 @@ export default function MyTasksScreen() {
                     <Title level={1} className={'leading-none m-0'}>My Tasks</Title>
                     <Text type={'secondary'} className={'text-lg font-light'}>Monitor all your tasks here</Text>
                 </div>
-                <Pill active={true}>Table</Pill>
-                <Pill active={false}>Kanban</Pill>
-                <Pill active={false}>Calendar</Pill>
+                <Pill active={true} onClick={() => setCurrentView('Table')}>Table</Pill>
+                <Pill active={false} onClick={() =>  setCurrentView('Kanban')}>Kanban</Pill>
+                <Pill active={false} onClick={() => setCurrentView('Timeline')}>Calendar</Pill>
             </div>
             <Button icon={<PlusOutlined/>} type={'primary'} size={'large'} onClick={() => context.showCreateModal()}>New Project</Button>
         </div>
         <Card className={'mt-2'}>
-            <Table bordered dataSource={tasks} columns={[
-                {
-                    title: 'Project Name',
-                    dataIndex: 'name',
-                    key: 'name',
-                },
-                {
-                    title: 'Assignee',
-                    dataIndex: 'assignee',
-                    key: 'assignee',
-                    render: (item: string[]) => (
-                        <div>{item.map((value: string, index: number) => <Avatar key={index} src={value}/>)}</div>)
-                },
-                {
-                    title: 'Priority',
-                    dataIndex: 'priority',
-                    key: 'priority',
-                    render: (text) => (
-                        <Button danger={text === 'Urgent'} type={`${text === 'Medium' ? 'primary' : 'default'}`}
-                                ghost={text === 'Medium'}
-
-                                className={`${text === 'Low' ? 'text-gray border-gray' : ''} rounded-full`}
-                                icon={<FlagOutlined/>}>{text}</Button>)
-                },
-                {
-                    title: 'Start Date',
-                    dataIndex: 'startDate',
-                    key: 'startDate',
-                    render: (text) => formatDate(text, 'dd MMMM yyyy')
-                },
-                {
-                    title: 'Due Date',
-                    dataIndex: 'dueDate',
-                    key: 'dueDate',
-                    render: (text) => formatDate(text, 'dd MMMM yyyy')
-                },
-                {
-                    title: 'Status',
-                    dataIndex: 'status',
-                    key: 'status',
-                    render: (text) => (<Tag
-                        color={text === 'Pending' ? 'orange' : text === 'Completed' ? 'green' : text === 'Review' ? 'blue' : 'purple'}>{text}</Tag>)
-                },
-                {
-                   key: 'action',
-                    render: () => <Button type={'text'} icon={<MoreOutlined/>}/>
-                }
-            ]} onRow={(row) => {
-                return {
-                    onClick: () => {
-
-                        setCurrentTask(row as Task)
-                        setOpen(true)
-                    }
-                }
-            }}/>
+            {currentView === 'Kanban' && <KanbanBoard tasks={tasks}/>}
+            {currentView === 'Table' && <TaskTable tasks={tasks}/>}
                 </Card>
-            {currentTask && <TaskDrawer task={currentTask} open={open} setOpen={(value) => setOpen(value)}/>}
+
     </div>
 }
 

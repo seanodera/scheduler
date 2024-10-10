@@ -1,16 +1,17 @@
 import {useParams} from "react-router-dom";
-import {Avatar, Button, Card, Dropdown, Table, Tag, Typography} from "antd";
+import {Button, Card, Dropdown, Tag, Typography} from "antd";
 import {generateFakeProjects} from "../data/projectData.ts";
-import {EyeOutlined, FlagOutlined, PlusOutlined} from "@ant-design/icons";
+import {EyeOutlined, PlusOutlined} from "@ant-design/icons";
 import {useModal} from "../contextProvider.tsx";
 import {formatDate} from "date-fns";
 import {useState} from "react";
-import KanbanBoard from "../components/KanbanBoard.tsx";
+import KanbanBoard from "../components/Tasks/KanbanBoard.tsx";
+import TaskTable from "../components/Tasks/TabledTasks.tsx";
 
 const {Title, Text} = Typography;
 export default function ManageProject() {
     const id = useParams()[ 'id' ];
-    const [currentView, setCurrentView] = useState<string>('table');
+    const [currentView, setCurrentView] = useState<string>('Table');
     const context = useModal();
     const project = generateFakeProjects(2)[ 0 ]
     console.log(id);
@@ -82,57 +83,7 @@ export default function ManageProject() {
                 </div>
                 <div>
                     {currentView === 'Kanban' && <KanbanBoard tasks={project.tasks}/>}
-                    {currentView === 'Table' && <Table dataSource={project.tasks} columns={[
-                        {
-                            title: 'Task',
-                            dataIndex: 'name',
-                            key: 'name',
-                        },
-                        {
-                            title: 'Assignee',
-                            dataIndex: 'assignee',
-                            key: 'assignee',
-                            render: (item: string[]) => (
-                                <div>{item.map((value: string, index: number) => <Avatar key={index}
-                                                                                         src={value}/>)}</div>)
-                        },
-                        {
-                            title: 'Priority',
-                            dataIndex: 'priority',
-                            key: 'priority',
-                            render: (text) => (
-                                <Button danger={text === 'Urgent'} type={`${text === 'Medium' ? 'primary' : 'default'}`}
-                                        ghost={text === 'Medium'}
-                                        size={'small'}
-                                        className={`${text === 'Low' ? 'text-gray border-gray' : ''} rounded-full`}
-                                        icon={<FlagOutlined/>}>{text}</Button>)
-                        },
-                        {
-                            title: 'Start Date',
-                            dataIndex: 'startDate',
-                            key: 'startDate',
-                            render: (text) => formatDate(text, 'dd MMM yyyy')
-                        },
-                        {
-                            title: 'Due Date',
-                            dataIndex: 'dueDate',
-                            key: 'dueDate',
-                            render: (text) => formatDate(text, 'dd MMM yyyy')
-                        },
-                        {
-                            title: 'Status',
-                            dataIndex: 'status',
-                            key: 'status',
-                            render: (text) => (<Tag
-                                color={text === 'Pending' ? 'orange' : text === 'Completed' ? 'green' : text === 'Review' ? 'blue' : 'purple'}>{text}</Tag>)
-                        },
-                    ]} onRow={(row) => {
-                        return {
-                            onClick: () => {
-                                context.showTaskDrawer(row)
-                            }
-                        }
-                    }}/>}
+                    {currentView === 'Table' && <TaskTable tasks={project.tasks}/>}
                 </div>
 
             </Card>
